@@ -31,15 +31,18 @@ public class Panel extends JPanel implements Runnable {
     }
 
     public void dibujarArray(Graphics g, int x, int y) {
+        //g.drawRect(x, y,20,200);
         for (Integer num: numeros) {
-            g.drawRect(x, y, ancho, num);
+            g.drawRect(x, y-num, ancho, num);
             x += ancho + 10;
+            //g.drawRect();
         }
     }
 
     private void llenarArray() {
         for (int i = 0; i < numeros.length; i++) {
             numeros[i] = (int) (Math.random() * 100);
+            //System.out.println(numeros[i]);
         }
     }
 
