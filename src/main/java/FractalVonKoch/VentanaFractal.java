@@ -4,11 +4,11 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class VentanaFractal extends JFrame{
+public class VentanaFractal extends JFrame {
     private static final long serialVersionUID = 1L;
 
-    public PanelFractal panel;
-    private Fractal modelo;
+    public PanelFractal panel; // dibujar el fractal
+    private Fractal modelo; // almacenar informacion sobre el fractal
 
     public static void main(String[] args) {
         VentanaFractal win = new VentanaFractal();
@@ -22,7 +22,7 @@ public class VentanaFractal extends JFrame{
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.init();
-        pack();
+        pack(); //ajuste tamaño
     }
 
     private void init() {
@@ -83,3 +83,7 @@ public class VentanaFractal extends JFrame{
         System.exit(0);
     }
 }
+
+
+
+

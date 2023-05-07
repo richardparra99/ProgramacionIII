@@ -6,6 +6,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class PanelFractal extends JPanel implements PropertyChangeListener {
+    // inicializamos sus dimensiones para dibujar el alto y ancho del fractal
     private int ancho = 600;
 
     private int alto = 400;

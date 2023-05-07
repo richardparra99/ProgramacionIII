@@ -66,6 +66,7 @@ public class Fractal implements IDibujo{
     public void dibujar(Graphics g) {
         if(tipo == SIERPINSKY) {
             hacerSierpinsky(10, 10, 300, 300, this.profundidad, g);
+
         }
         if (tipo == VONKOCH) {
             hacerVonKoch(10, 150, 400, 150, this.profundidad, g);
@@ -77,6 +78,7 @@ public class Fractal implements IDibujo{
         int pAncho = ancho / 3;
         int pAlto = alto / 3;
         if (n == 1) {
+            gc.setColor(Color.BLUE);
             gc.drawRect(x1, y1, ancho, alto);
             gc.drawRect(x1 + pAncho, y1 + pAlto, pAncho, pAlto);
         } // end of if (n == 1)
@@ -86,14 +88,14 @@ public class Fractal implements IDibujo{
              * ****************** 4 *   * 5 *
              * ****************** 6 * 7 * 8 * **************
              */
-            hacerSierpinsky(x1, y1, pAncho, pAlto, n - 1, gc);
-            hacerSierpinsky(x1 + pAncho, y1, pAncho, pAlto, n - 1, gc);
-            hacerSierpinsky(x1 + 2 * pAncho, y1, pAncho, pAlto, n - 1, gc);
-            hacerSierpinsky(x1, y1 + pAlto, pAncho, pAlto, n - 1, gc); // 4
-            hacerSierpinsky(x1 + 2 * pAncho, y1 + pAlto, pAncho, pAlto, n - 1, gc); // 5
-            hacerSierpinsky(x1, y1 + 2 * pAlto, pAncho, pAlto, n - 1, gc); // 6
-            hacerSierpinsky(x1 + pAncho, y1 + 2 * pAlto, pAncho, pAlto, n - 1, gc); // 7
-            hacerSierpinsky(x1 + 2 * pAncho, y1 + 2 * pAlto, pAncho, pAlto,	n - 1, gc); // 8
+            hacerSierpinsky(x1, y1, pAncho, pAlto, n - 1, gc); // superior izquierdo
+            hacerSierpinsky(x1 + pAncho, y1, pAncho, pAlto, n - 1, gc); // superior central
+            hacerSierpinsky(x1 + 2 * pAncho, y1, pAncho, pAlto, n - 1, gc);//superior derecho
+            hacerSierpinsky(x1, y1 + pAlto, pAncho, pAlto, n - 1, gc); // 4 - central izquierdo
+            hacerSierpinsky(x1 + 2 * pAncho, y1 + pAlto, pAncho, pAlto, n - 1, gc); // 5 - central derecho
+            hacerSierpinsky(x1, y1 + 2 * pAlto, pAncho, pAlto, n - 1, gc); // 6 - inferior izquierdo.
+            hacerSierpinsky(x1 + pAncho, y1 + 2 * pAlto, pAncho, pAlto, n - 1, gc); // 7 - inferior central
+            hacerSierpinsky(x1 + 2 * pAncho, y1 + 2 * pAlto, pAncho, pAlto,	n - 1, gc); // 8 - inferior derecho
         } // end of else
 
     }
@@ -122,6 +124,8 @@ public class Fractal implements IDibujo{
             hacerVonKoch(x2, y2, x3, y3, n - 1, gc);
             //hacerVonKoch(x2, y2, x3, y3, n - 1, gc);
             //hacerVonKoch(x4, y4, x2, y2, n - 1, gc);
+
         }
     }
+
 }
