@@ -1,6 +1,8 @@
-package Patrones;
+package Patrones.Observer;
 
-public class SuscriptorAritmetico implements Observer{
+import Patrones.Observer.Observer;
+
+public class SuscriptorAritmetico implements Observer {
     private int previo;
     private int numero;
     private String operacion;
@@ -14,7 +16,7 @@ public class SuscriptorAritmetico implements Observer{
     public void actualizar(String mensaje) {
         try {
             numero = Integer.parseInt(mensaje);
-            int resultado;
+            int resultado = 0;
             switch (this.operacion){
                 case "suma":
                     resultado = numero + previo;
@@ -29,6 +31,8 @@ public class SuscriptorAritmetico implements Observer{
                     resultado = numero / previo;
                     break;
             }
+            System.out.println(resultado);
+            previo = numero;
 
         }catch (Exception e){
             System.out.println("ha ocurrido el siguiente problema" + e.getMessage());

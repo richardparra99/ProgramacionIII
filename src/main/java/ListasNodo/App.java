@@ -1,5 +1,7 @@
 package ListasNodo;
 
+import ListasNodo.UI.Ventana;
+
 public class App {
     public static void main(String[] args) {
         /*Lista listaSimple = new Lista();
@@ -15,7 +17,7 @@ public class App {
         //listaSimple.eliminarValor(8);
         listaSimple.eliminarValorPorPosicion(-2);
         System.out.println(listaSimple.toString());*/
-        ListaDoble listaDoble = new ListaDoble();
+        /*ListaDoble listaDoble = new ListaDoble();
         listaDoble.agregarNodoAlFinal(1);
         listaDoble.agregarNodoAlFinal("tres");
         listaDoble.agregarNodoAlPrincipio("dos");
@@ -31,6 +33,7 @@ public class App {
         String rutaNueva = "C:\\Users\\Richard-P\\pruebaEscritura.txt.txt";
         System.out.println();
         manejador.escribirArchivo(rutaNueva, "estas lineas se escribieron");
-        manejador.leerArchivo(rutaNueva);
+        manejador.leerArchivo(rutaNueva);*/
+        Ventana ventana = new Ventana();
     }
 }

@@ -1,4 +1,4 @@
-package Patrones;
+package Patrones.Observer;
 
 public interface Observable {
     void suscribir(Observer observer);

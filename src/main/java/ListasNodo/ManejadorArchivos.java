@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class ManejadorArchivos {
+
     public void leerArchivo(String ruta){
         try {
             File archivo = new File(ruta);
@@ -32,8 +33,20 @@ public class ManejadorArchivos {
         }
 
     }
-    public void eliminarArchivo(String ruta, String contenido){
+    public void eliminarArchivo(String ruta){
         File archivo = new File(ruta);
+        if(!archivo.delete()) System.out.println("se elimino satisfactoriamente");
+    }
 
+    //toma una ruta y crea un directorio en la ruta especificada.
+    public void crearDirectorio(String ruta) {
+        File directorio = new File(ruta);
+        if (!directorio.exists()) {
+            if (directorio.mkdirs()) {
+                System.out.println("Directorio creado");
+            } else {
+                System.out.println("Error al crear directorio");
+            }
+        }
     }
 }
