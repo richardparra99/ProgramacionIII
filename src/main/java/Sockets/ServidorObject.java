@@ -18,10 +18,12 @@ public class ServidorObject {
     private BufferedReader entrada;
     private PrintWriter salida;
     private boolean escucharMensajes = true;
+
     public ServidorObject(){
 
         this.encenderServidor();
     }
+
     private void encenderServidor(){
         try {
             servidor = new ServerSocket(8012);

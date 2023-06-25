@@ -1,9 +1,19 @@
 package Sockets.BatallaNaval;
 
+import Sockets.ServidorObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Random;
 
 public class Ventana extends JFrame implements ActionListener {
@@ -11,14 +21,22 @@ public class Ventana extends JFrame implements ActionListener {
     private JLabel lbNombre = new JLabel("Nombre: ");
     private JTextField txtNombre = new JTextField();
     private JButton btnInicio = new JButton("Iniciar");
+    private JButton btnCancelar = new JButton("Cancelar");
     private JButton[][] btnTabla = new JButton[10][10];
     private JButton btnReiniciar = new JButton("Reiniciar");
     private JLabel lbJugador = new JLabel("Jugador: ");
+    private JLabel lbJugador2 = new JLabel("Jugador 2: ");
     private String nombreJugador = "";
-    private int contador = 0;
+    //private int contador = 0;
     private int intentos = 0;
-    
-    public Ventana(){
+    private ServerSocket servidor;
+    private static final Logger logger = LogManager.getLogger(Ventana.class);
+    private Socket socket;
+    private BufferedReader entrada;
+    private PrintWriter salida;
+    //private boolean escucharMensajes = true;
+
+    public Ventana() {
 
         this.setSize(550, 580);
         this.setTitle("BATALLA NAVAL");
@@ -28,10 +46,11 @@ public class Ventana extends JFrame implements ActionListener {
         this.setVisible(true);
         btnReiniciar.setVisible(false);
         lbJugador.setVisible(false);
+        lbJugador2.setVisible(false);
         this.setLocationRelativeTo(null);
     }
 
-    public void iniciarComponentes(){
+    public void iniciarComponentes() {
         //setLayout(new GridLayout(10, 10)); // Establecer GridLayout
         setLayout(null);
         lbEtiqueta.setText("BATALLA NAVAL");
@@ -40,21 +59,26 @@ public class Ventana extends JFrame implements ActionListener {
         lbEtiqueta.setForeground(Color.BLACK);
         lbEtiqueta.setFont(new Font("cooper black", Font.PLAIN, 40));
 
-        lbNombre.setBounds(137,280,100,20);
-        txtNombre.setBounds(135,310,200,20);
+        lbNombre.setBounds(137, 280, 100, 20);
+        txtNombre.setBounds(135, 310, 200, 20);
         btnInicio.setBounds(185, 350, 100, 30);
+        btnCancelar.setBounds(185, 380, 100, 30);
         btnReiniciar.setBounds(185, 480, 100, 30);
         lbJugador.setBounds(40, 505, 100, 30);
+        lbJugador2.setBounds(300, 480, 100, 30);
 
         this.add(lbEtiqueta);
         this.add(lbNombre);
         this.add(txtNombre);
         this.add(btnInicio);
+        this.add(btnCancelar);
         this.add(btnReiniciar);
         this.add(lbJugador);
+        this.add(lbJugador2);
         //btnInicio.addActionListener(this);
     }
-    private void cargarListeners(){
+
+    private void cargarListeners() {
         btnInicio.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -62,9 +86,21 @@ public class Ventana extends JFrame implements ActionListener {
                 lbNombre.setVisible(false);
                 txtNombre.setVisible(false);
                 btnInicio.setVisible(false);
+                btnCancelar.setVisible(false);
+                try {
+                    servidor = new ServerSocket(8012);
+                    logger.info("Jugador 1 conectado");
+                    logger.info("Esperando respuesta del jugador 2");
+                        socket = servidor.accept();
+                        logger.info("Jugador 2 conectado");
+                        entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        salida = new PrintWriter(socket.getOutputStream(),true);
+                }catch (IOException error){
+                    error.printStackTrace();
+                }
                 for (int filas = 0; filas < 10; filas++) {
                     for (int columnas = 0; columnas < 10; columnas++) {
-                        JButton btn1 = crearBotonMatriz(filas,columnas);
+                        JButton btn1 = crearBotonMatriz(filas, columnas);
                         btnTabla[filas][columnas] = btn1;
                         nombreJugador = txtNombre.getText();
                         lbJugador.setText("Jugador: " + nombreJugador);
@@ -72,7 +108,14 @@ public class Ventana extends JFrame implements ActionListener {
                 }
                 btnReiniciar.setVisible(true);
                 lbJugador.setVisible(true);
+                lbJugador2.setVisible(true);
                 repaint();
+            }
+        });
+        btnCancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                apagarServidor();
             }
         });
 
@@ -80,10 +123,11 @@ public class Ventana extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 reiniciarJuego();
-                verificarResultado();
+                //verificarResultado();
             }
         });
     }
+
     private JButton crearBotonMatriz(int indice, int aux) {
         JButton btn = new JButton();
         // Configura el tamaño y posición del botón en función de los índices
@@ -103,7 +147,6 @@ public class Ventana extends JFrame implements ActionListener {
                     } else {
                         btn1.setText("O");
                     }
-                    contador++;
                     intentos++;
                     verificarResultado();
                 }
@@ -116,8 +159,9 @@ public class Ventana extends JFrame implements ActionListener {
         return btn;
     }
 
+
     // metodo para limpiar o reinicar mi tabla matriz
-    private void reiniciarJuego(){
+    private void reiniciarJuego() {
         for (int filas = 0; filas < 10; filas++) {
             for (int columnas = 0; columnas < 10; columnas++) {
                 JButton btn2 = btnTabla[filas][columnas];
@@ -126,16 +170,24 @@ public class Ventana extends JFrame implements ActionListener {
         }
     }
 
-    private void verificarResultado(){
+    private void verificarResultado() {
         if (intentos >= 3) {
-            boolean gano = true;
-            // Verificar si se cumple la condición de victoria
-            if (btnTabla[0][0].getText().equals("O") && btnTabla[0][1].getText().equals("O") && btnTabla[0][2].getText().equals("O")) {
-                gano = true;
+            boolean gano = false;
+
+            // Verificar filas para victoria
+            for (int fila = 0; fila < 10; fila++) {
+                if (btnTabla[fila][0].getText().equals("O") && btnTabla[fila][1].getText().equals("O") && btnTabla[fila][2].getText().equals("O")) {
+                    gano = true;
+                    break;
+                }
             }
-            // Verificar si se cumple la condición de derrota
-            if (btnTabla[0][0].getText().equals("X") && btnTabla[0][1].getText().equals("X") && btnTabla[0][2].getText().equals("X")) {
-                gano = false;
+
+            // Verificar filas para derrota
+            for (int fila = 0; fila < 10; fila++) {
+                if (btnTabla[fila][0].getText().equals("X") && btnTabla[fila][1].getText().equals("X") && btnTabla[fila][2].getText().equals("X")) {
+                    gano = false;
+                    break;
+                }
             }
 
             // Mostrar mensaje correspondiente
@@ -148,7 +200,18 @@ public class Ventana extends JFrame implements ActionListener {
     }
 
 
+    public void apagarServidor() {
+//este tiene que enviar mensaje
+        try {
+            this.entrada.close();
+            this.salida.close();
+            this.socket.close();
+            this.servidor.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
