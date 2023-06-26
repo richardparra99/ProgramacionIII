@@ -36,7 +36,7 @@ public class Cola<T> {
         return valor;
     }
 
-    public T colaVacio() {
+    //public T colaVacio() {
         //return valor == null;
-    }
+   // }
 }
